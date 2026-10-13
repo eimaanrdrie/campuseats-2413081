@@ -1,7 +1,7 @@
 
 import MenuItemCard from './MenuItemCard.jsx';
 
-function MenuList({ items }) {
+function MenuList({ items, onAdd }) {
   if (items.length === 0) {
     return (
       <p className="muted">
@@ -16,6 +16,7 @@ function MenuList({ items }) {
         <MenuItemCard
           key={item.id}
           item={item}
+          onAdd={onAdd}
         />
       ))}
     </div>

@@ -1,5 +1,5 @@
 
-function MenuItemCard({ item }) {
+function MenuItemCard({ item, onAdd }) {
   return (
     <div className="menu-item-card">
       <p>{item.category}</p>
@@ -10,7 +10,7 @@ function MenuItemCard({ item }) {
 
       <p>RM {item.price.toFixed(2)}</p>
 
-      <button disabled={!item.available}>
+      <button className="btn" disabled={!item.available} onClick={() => onAdd(item)}>
         {item.available ? "Add to cart" : "Sold out"}
       </button>
     </div>
