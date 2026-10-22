@@ -12,10 +12,7 @@ function App() {
   const [error, setError] = useState(null)
   const [reloadKey, setReloadKey] = useState(0)
   const [selectedVendorId, setSelectedVendorId] = useState(null)
-
-  // Each line has this shape: { item, qty }.
   const [cart, setCart] = useState([])
-
   const [view, setView] = useState('menu')
   const [lastOrder, setLastOrder] = useState(null)
 
@@ -23,7 +20,6 @@ function App() {
     (vendor) => vendor.id === selectedVendorId
   )
 
-  // Badge total is derived, not stored.
   const cartCount = cart.reduce(
     (total, line) => total + line.qty,
     0
@@ -32,10 +28,11 @@ function App() {
   useEffect(() => {
     const controller = new AbortController()
 
-    async function loadVendors() {
-      setLoading(true)
-      setError(null)
+    // Show the skeleton immediately, including when Try again is clicked.
+    setLoading(true)
+    setError(null)
 
+    async function loadVendors() {
       try {
         const res = await fetch('/api/vendors.json', {
           signal: controller.signal
@@ -46,6 +43,7 @@ function App() {
         }
 
         const data = await res.json()
+
         setVendors(data)
         setSelectedVendorId(data[0]?.id ?? null)
       } catch (err) {
@@ -59,9 +57,13 @@ function App() {
       }
     }
 
-    loadVendors()
+    // Stretch task: delay the request so the skeleton can be seen.
+    const timeoutId = setTimeout(loadVendors, 600)
 
-    return () => controller.abort()
+    return () => {
+      clearTimeout(timeoutId)
+      controller.abort()
+    }
   }, [reloadKey])
 
   function handleAddToCart(item) {
@@ -91,7 +93,6 @@ function App() {
 
         const newQty = line.qty + delta
 
-        // A quantity of zero removes its cart line.
         return newQty > 0 ? [{ ...line, qty: newQty }] : []
       })
     )
@@ -104,7 +105,6 @@ function App() {
   }
 
   function handlePlaceOrder(details) {
-    // Same derived total calculation used by CartPage.
     const total = cart.reduce(
       (sum, line) => sum + line.item.price * line.qty,
       0
