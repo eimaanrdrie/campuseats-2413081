@@ -1,3 +1,6 @@
+# Vendors
+Vendors 2 from 2415805.
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
