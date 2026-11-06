@@ -1,19 +1,34 @@
-function Header({ cartCount, onShowMenu, onShowCart }) {
+import { Link, NavLink } from 'react-router'
+import useCart from '../hooks/useCart'
+
+function navClass({ isActive }) {
+  return isActive ? 'active' : undefined
+}
+
+export default function Header() {
+  const { count } = useCart()
+
   return (
     <header className="header">
-      <h1 className="logo">CampusEats</h1>
+      <h1 className="logo">
+        <Link className="logo-link" to="/">
+          CampusEats
+        </Link>
+      </h1>
 
       <nav className="nav">
-        <button type="button" onClick={onShowMenu}>
+        <NavLink className={navClass} end to="/">
           Vendors
-        </button>
+        </NavLink>
 
-        <button type="button" className="cart" onClick={onShowCart}>
-          Cart <span className="badge">{cartCount}</span>
-        </button>
+        <NavLink className={navClass} to="/cart">
+          Cart <span className="badge">{count}</span>
+        </NavLink>
+
+        <NavLink className={navClass} to="/orders">
+          Orders
+        </NavLink>
       </nav>
     </header>
   )
 }
-
-export default Header
